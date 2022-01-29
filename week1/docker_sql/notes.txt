@@ -1,0 +1,123 @@
+docker run image-name
+docker build -t image_nm:tag .
+
+To run postgres image:
+docker run -it \
+    -e POSTGRES_USER="root" \
+    -e POSTGRES_PASSWORD="root" \
+    -e POSTGRES_DB="ny_taxi" \
+    -v "$(pwd)/ny_taxi_postgres_data:/var/lib/postgresql/data" \
+    -p 5432:5432 \
+    postgres:13
+
+To test connection in host machine, there's utility pgcli, (similar to beeline for hive)
+pip install pgcli
+
+Another alternative is using jupyter notebook and python,
+pip install sqlalchemy psycopg2-binary
+
+Connection string:
+database://user:passwd@host:port/db_name
+
+postgresql://root:root@localhost:5432/ny_taxi
+
+
+pgadmin - GUI Tools to interact with postgres 
+
+docker run -it \
+    -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
+    -e PGADMIN_DEFAULT_PASSWORD="root" \
+    -p 8080:80 \
+    dpage/pgadmin4
+
+-> This won't be able to connect to postgres since we've postgres running in a different container.
+-> We've to run both pgadmin and postgres containers in same network inorder to connect both.
+
+Create a network
+
+docker network create pg-network
+res -> 65d49a7c886e5fd17fcb643974ae49c3b20ba9de972f60edacecca86801e957c
+
+Add --network option in docker run commands of both containers.
+
+Postgres:
+    docker run -it \
+        -e POSTGRES_USER="root" \
+        -e POSTGRES_PASSWORD="root" \
+        -e POSTGRES_DB="ny_taxi" \
+        -v "$(pwd)/ny_taxi_postgres_data:/var/lib/postgresql/data" \
+        -p 5432:5432 \
+        --network=pg-network \
+        --name=pg-database \
+        postgres:13
+
+Pgadmin:
+    docker run -it \
+        -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
+        -e PGADMIN_DEFAULT_PASSWORD="root" \
+        -p 8080:80 \
+        --network=pg-network \
+        --name=pg-admin \
+        dpage/pgadmin4
+
+-> We can run queries on table inside postgres on pgadmin ui tool.
+-> When we connect to postgres via pgadmin, bettee we specify container name (instead of localhost) in host field.
+
+- To convert jupyter notebook into python script, command
+    jupyter nbconvert --to=script upload_data.ipynb
+
+-> Test python script once before dockerizing.
+
+URL="https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2021-01.csv"
+
+python ingest_data.py \
+  --user=root \
+  --password=root \
+  --host=localhost \
+  --port=5432 \
+  --db=ny_taxi \
+  --table_name=yellow_taxi_trips \
+  --csv_url=${URL}
+
+Build Docker Image Again:
+
+sudo docker build -t taxi_ingest:v001 .
+
+>> To remove dangling docker images,
+docker image prune --filter="dangling=true"
+
+
+IMP:
+-> This command line parameters we can pass in docker run command.
+-> We don't need to pass those in ENTRYPOINT in Dockerfile if we do step 1.
+-> Pass arguements after image_name in docker run commands
+
+URL="https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2021-01.csv"
+
+docker run -it --network=pg-network taxi_ingest:v001 \
+    --user=root \
+    --password=root \
+    --host=pg-database \
+    --port=5432 \
+    --db=ny_taxi \
+    --table_name=yellow_taxi_trips \
+    --csv_url=${URL}
+
+Very Very IMP:
+-> Above host name is where postgres is running. Same name we specified in pgadmin when setting up connection.
+So, we'd have to pass [postgres container's name as host, not localhost], bcoz postgres is not running on our localhost.
+
+FYI:
+>> To setup http server on localhost using python real quick,
+python -m http.server
+
+
+>> Docker-compose:
+
+To Run multiple containers together and in one network with mapping of volume, env, port, etc
+
+docker-compose.yml
+
+docker-compose up -d
+
+docker-compose down
