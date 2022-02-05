@@ -3,3 +3,8 @@ week1/docker_sql/pgadmin_conn_data/
 week1/docker_sql/yello_tripdata_2021-01.csv
 week1/docker_sql/output.csv
 week1/docker_sql/test.csv
+week1/terraform_gcp/*.tfstate
+week1/terraform_gcp/*.tfstate.*
+week1/terraform_gcp/**.terraform
+week1/terraform_gcp/**.terraform.lock.*
+
