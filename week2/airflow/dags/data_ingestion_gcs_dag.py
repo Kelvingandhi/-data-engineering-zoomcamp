@@ -26,7 +26,7 @@ def format_csv_to_parquet(src_file):
     if not src_file.endswith('.csv'):
         logging.error("Only accept .csv file")
         return
-    table = pq.read_csv(src_file)
+    table = csv.read_csv(src_file)
     pq.write_table(table, src_file.replace('.csv','.parquet'))
 
 # NOTE: takes 20 mins, at an upload speed of 800kbps. Faster if your internet has a better upload speed
@@ -46,7 +46,7 @@ def upload_to_gcs(bucket, object_name, local_file):
     # End of Workaround
 
     client = storage.Client()
-    bucket = storage.bucket(bucket)
+    bucket = client.bucket(bucket)
 
     blob = bucket.blob(object_name)
     blob.upload_from_filename(local_file)
@@ -98,7 +98,7 @@ with DAG(dag_id="data_ingestion_gcs_dag",
                     "tableId" : "external_table"
                 },
                 "externalDataConfiguration": {
-                    "sourceformat" : "PARQUET",
+                    "sourceFormat" : "PARQUET",
                     "sourceUris": [f"gs://{BUCKET}/raw/{parquet_file}"]
                 }
             }
