@@ -9,6 +9,6 @@ week1/terraform_gcp/terraform/**.terraform
 week1/terraform_gcp/terraform/**.terraform.lock.*
 week2/airflow/**logs/
 week2/airflow/**plugins/
-
+week2/airflow/dags/__pycache__
 
 
