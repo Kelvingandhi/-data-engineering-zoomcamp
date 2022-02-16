@@ -116,8 +116,31 @@ python -m http.server
 
 To Run multiple containers together and in one network with mapping of volume, env, port, etc
 
+docker-compose build
+
 docker-compose.yml
 
 docker-compose up -d
 
 docker-compose down
+
+
+-> In vs code, select character, then press ctrl + d to select further occurances and 
+then write/edit those simultaneously
+-> To select multiple cursors, use shift + ctrl + up/down arrow key
+
+
+>> Communication between 2 docker-composes:
+
+services:
+  pgdatabase:
+    blah blah
+    blah
+
+    networks:
+      - airflow
+
+networks:
+  airflow:
+    external:
+      name: airflow_default
