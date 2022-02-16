@@ -34,7 +34,11 @@ RUN DOWNLOAD_URL="https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/goo
     && rm -rf "${TMP_DIR}" \
     && gcloud --version
 
+RUN mkdir -p $AIRFLOW_HOME/pg_input/csvs
+RUN chmod 775 $AIRFLOW_HOME/pg_input/csvs
+
 WORKDIR $AIRFLOW_HOME
+
 
 #COPY scripts scripts
 
