@@ -1,0 +1,31 @@
+IMP Files:
+1. dbt_project.yml
+    - declare profile name
+    - specify model structure and types
+    - few more things regarding project
+
+2. profiles.yml (in home dir):
+    - Specify database credentials. Keep them seperate as dev and prd
+
+3. schema.yml (inside model dir)
+    - Specify sources from where data should be pulled
+
+4. Macro
+    - Similar to UDF functions like other programming languages.
+    - Difference is UDF returns the result of computatitons, but macro in DBT returns the "code" itself.
+    - Use to avoid repeatitive code and code readability.
+    - Use exact same way config & source using jinja template.
+    - While passing parameters in macro, always use '' quotes.
+
+5. To run specific model use,
+    - dbt run -m <model_name>
+    - dbt run --select <model_name>
+
+6. packages.yml
+    - To use macro, models of different DBT project into our project, 
+        we have to put those dependencies in packages.yml file.
+    - To installed those dependencies run this command,
+        
+        dbt deps
+
+    - It will download those packages in our project under dbt_packages(hidden).

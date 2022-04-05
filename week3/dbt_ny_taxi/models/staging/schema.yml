@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+    - name: staging
+      database: automated-modem-339718
+      schema: trips_data_all
+      tables:
+      - name: green_taxi_tripdata_partitioned_table
+      - name: yellow_taxi_tripdata_partitioned_table
