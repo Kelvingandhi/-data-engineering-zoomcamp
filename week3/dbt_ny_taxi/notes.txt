@@ -19,6 +19,7 @@ IMP Files:
 
 5. To run specific model use,
     - dbt run -m <model_name>
+    - dbt run -m <model_name> <model_name>
     - dbt run --select <model_name>
 
 6. packages.yml
@@ -29,3 +30,9 @@ IMP Files:
         dbt deps
 
     - It will download those packages in our project under dbt_packages(hidden).
+
+7. Variables
+    - Directly pass in sql file var() within jinja template
+    - Also pass in dbt_project.yml file as global variables and use them inside sql Files
+    - To run dbt model with variable in runtime
+        dbt build --m <model.sql> --var 'is_test_run: false'
