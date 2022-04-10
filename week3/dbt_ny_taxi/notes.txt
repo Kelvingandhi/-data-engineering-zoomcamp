@@ -21,6 +21,8 @@ IMP Files:
     - dbt run -m <model_name>
     - dbt run -m <model_name> <model_name>
     - dbt run --select <model_name>
+    - dbt run --select +<model_name> (which would run all upstream dependencies of that model)
+    - dbt build --select +<model_name> (along with seeds)
 
 6. packages.yml
     - To use macro, models of different DBT project into our project, 
@@ -36,3 +38,20 @@ IMP Files:
     - Also pass in dbt_project.yml file as global variables and use them inside sql Files
     - To run dbt model with variable in runtime
         dbt build --m <model.sql> --var 'is_test_run: false'
+
+8. Seeds
+    - Copy csv into csv dir
+    - Run command 
+        -> dbt seed 
+    - If any updates in file, run refresh command
+        -> dbt seed --full-refresh
+
+    - We can define property for seed inside dbt_project.yml like column datatypes, etc.
+
+    - dbt run will run all models except seeds, if you want to run seed as well, then run
+        -> dbt build
+
+    - Use ref() macro to refer seed inside models, use seed name to refer it.
+
+
+
