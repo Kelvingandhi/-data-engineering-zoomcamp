@@ -22,7 +22,7 @@ IMP Files:
     - dbt run -m <model_name> <model_name>
     - dbt run --select <model_name>
     - dbt run --select +<model_name> (which would run all upstream dependencies of that model)
-    - dbt build --select +<model_name> (along with seeds)
+    - dbt build --select +<model_name> (along with seeds, tests, everything)
 
 6. packages.yml
     - To use macro, models of different DBT project into our project, 
@@ -53,5 +53,28 @@ IMP Files:
 
     - Use ref() macro to refer seed inside models, use seed name to refer it.
 
+9. Tests
+    - Validate our model with respect to data quality, and logic
+    - We can pass different test criteria (assumptions) in schema.yml under model section.
+    - For each model, for individual columns we can put test constraints.
+    - We can pass severity level if it fails in test like warn, error, etc.
+    - These are some of tests values we can put,
+        tests: 
+          - unique: 
+              severity: warn
+          - not_null:
+              severity: warn
+          - relationships:
+              to: ref('taxi_zone_lookup')
+              field: locationid
+              severity: warn
+          - accepted_values:
+              values: "{{ var('payment_type_values') }}"
+              severity: warn
+              quote: false
+    - We can pass seed reference, variables while defining tests.
 
+    - To run (all) tests, 
+        -> dbt test
 
+        
