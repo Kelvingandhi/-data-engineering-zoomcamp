@@ -1,0 +1,13 @@
+week1/docker_sql/ny_taxi_postgres_data/
+week1/docker_sql/pgadmin_conn_data/
+week1/docker_sql/yello_tripdata_2021-01.csv
+week1/docker_sql/output.csv
+week1/docker_sql/test.csv
+week1/terraform_gcp/terraform/*.tfstate
+week1/terraform_gcp/terraform/*.tfstate.*
+week1/terraform_gcp/terraform/**.terraform
+week1/terraform_gcp/terraform/**.terraform.lock.*
+week2/airflow/**logs/
+week2/airflow/**plugins/
+week2/airflow/dags/__pycache__
+week2/airflow/.env
